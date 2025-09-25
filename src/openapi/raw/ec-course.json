@@ -1,0 +1,4060 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "2.0.0",
+    "title": "課程 API 文件 | 六角學院",
+    "description": "打破影音課程售後不理，我們在線上等著你。<br/><strong>注意事項：登入成功後請點「Authorize」輸入 Token。</strong>"
+  },
+  "servers": [
+    {
+      "url": "https:"
+    },
+    {
+      "url": "http:"
+    }
+  ],
+  "tags": [],
+  "paths": {
+    "/v2/admin/signin": {
+      "post": {
+        "tags": ["登入及驗證"],
+        "description": "",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "example@test.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "example"
+                  }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "登入成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/adminSignin"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/v2/logout": {
+      "post": {
+        "tags": ["登入及驗證"],
+        "description": "",
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "登出成功"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/v2/api/user/check": {
+      "post": {
+        "tags": ["登入及驗證"],
+        "description": "",
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "登入成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/checkLoginAuth"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "重新登入",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/checkLoginError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/admin/products/all": {
+      "get": {
+        "tags": ["管理控制台 - 產品 (Products)"],
+        "description": "",
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getProductsAll"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/admin/products": {
+      "get": {
+        "tags": ["管理控制台 - 產品 (Products)"],
+        "description": "",
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getProducts"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/admin/product": {
+      "post": {
+        "tags": ["管理控制台 - 產品 (Products)"],
+        "description": "",
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "example": "[賣]動物園造型衣服3"
+                      },
+                      "category": {
+                        "type": "string",
+                        "example": "衣服2"
+                      },
+                      "origin_price": {
+                        "type": "number",
+                        "example": 100
+                      },
+                      "price": {
+                        "type": "number",
+                        "example": 300
+                      },
+                      "unit": {
+                        "type": "string",
+                        "example": "個"
+                      },
+                      "description": {
+                        "type": "string",
+                        "example": "Sit down please 名設計師設計"
+                      },
+                      "content": {
+                        "type": "string",
+                        "example": "這是內容"
+                      },
+                      "is_enabled": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "imageUrl": {
+                        "type": "string",
+                        "example": "主圖網址"
+                      },
+                      "imagesUrl": {
+                        "type": "array",
+                        "example": [
+                          "圖片網址一",
+                          "圖片網址二",
+                          "圖片網址三",
+                          "圖片網址四",
+                          "圖片網址五"
+                        ],
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "required": ["data"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "已建立產品"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "imagesUrl 格式不正確"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/admin/product/{id}": {
+      "put": {
+        "tags": ["管理控制台 - 產品 (Products)"],
+        "description": "",
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "要修改的 ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "example": "[賣]動物園造型衣服3"
+                      },
+                      "category": {
+                        "type": "string",
+                        "example": "衣服2"
+                      },
+                      "origin_price": {
+                        "type": "number",
+                        "example": 100
+                      },
+                      "price": {
+                        "type": "number",
+                        "example": 300
+                      },
+                      "unit": {
+                        "type": "string",
+                        "example": "個"
+                      },
+                      "description": {
+                        "type": "string",
+                        "example": "Sit down please 名設計師設計"
+                      },
+                      "content": {
+                        "type": "string",
+                        "example": "這是內容"
+                      },
+                      "is_enabled": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "imageUrl": {
+                        "type": "string",
+                        "example": "主圖網址"
+                      },
+                      "imagesUrl": {
+                        "type": "array",
+                        "example": [
+                          "圖片網址一",
+                          "圖片網址二",
+                          "圖片網址三",
+                          "圖片網址四",
+                          "圖片網址五"
+                        ],
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "required": ["data"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "已更新產品"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "title 屬性不得為空"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "id 不存在"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["管理控制台 - 產品 (Products)"],
+        "description": "",
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "要刪除的 ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "已刪除產品"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "無此權限"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "找不到產品"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/admin/orders": {
+      "get": {
+        "tags": ["管理控制台 - 訂單 (Orders)"],
+        "description": "",
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getOrders"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/admin/order/{id}": {
+      "put": {
+        "tags": ["管理控制台 - 訂單 (Orders)"],
+        "description": "",
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "要修改的 ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "create_at": {
+                        "type": "number",
+                        "example": 1523539519
+                      },
+                      "is_paid": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "這是留言"
+                      },
+                      "products": {
+                        "type": "object",
+                        "properties": {
+                          "L8nBrq8Ym4ARI1Kog4t": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "L8nBrq8Ym4ARI1Kog4t"
+                              },
+                              "product_id": {
+                                "type": "string",
+                                "example": "-L8moRfPlDZZ2e-1ritQ"
+                              },
+                              "qty": {
+                                "type": "string",
+                                "example": "3"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "user": {
+                        "type": "object",
+                        "properties": {
+                          "address": {
+                            "type": "string",
+                            "example": "kaohsiung"
+                          },
+                          "email": {
+                            "type": "string",
+                            "example": "test@gmail.com"
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "test"
+                          },
+                          "tel": {
+                            "type": "string",
+                            "example": "0912346768"
+                          }
+                        }
+                      },
+                      "num": {
+                        "type": "number",
+                        "example": 2
+                      }
+                    }
+                  }
+                },
+                "required": ["data"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/updateOrderById"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "title 屬性不得為空"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["管理控制台 - 訂單 (Orders)"],
+        "description": "",
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "要修改的 ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/removeOrdersByOrderId"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/admin/orders/all": {
+      "delete": {
+        "tags": ["管理控制台 - 訂單 (Orders)"],
+        "description": "",
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/removeAllOrders"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/admin/coupon": {
+      "post": {
+        "tags": ["管理控制台 - 優惠卷 (Coupon)"],
+        "description": "",
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "example": "超級特惠價格"
+                      },
+                      "is_enabled": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "percent": {
+                        "type": "number",
+                        "example": 80
+                      },
+                      "due_date": {
+                        "type": "number",
+                        "example": 1555459200
+                      },
+                      "code": {
+                        "type": "string",
+                        "example": "testCode"
+                      }
+                    }
+                  }
+                },
+                "required": ["data"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "已建立產品"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "imagesUrl 格式不正確"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/admin/coupon/{id}": {
+      "put": {
+        "tags": ["管理控制台 - 優惠卷 (Coupon)"],
+        "description": "",
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "要修改的 ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "example": "超級特惠價格2"
+                      },
+                      "is_enabled": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "percent": {
+                        "type": "number",
+                        "example": 70
+                      },
+                      "due_date": {
+                        "type": "number",
+                        "example": 1555459200
+                      },
+                      "code": {
+                        "type": "string",
+                        "example": "testCode"
+                      }
+                    }
+                  }
+                },
+                "required": ["data"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "已更新產品"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "title 屬性不得為空"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "id 不存在"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["管理控制台 - 優惠卷 (Coupon)"],
+        "description": "",
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "要刪除的 ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "已刪除優惠券"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "找不到優惠券"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/admin/coupons": {
+      "get": {
+        "tags": ["管理控制台 - 優惠卷 (Coupon)"],
+        "description": "",
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getCoupons"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/admin/upload": {
+      "post": {
+        "tags": ["管理控制台 - 上傳圖片(Upload)"],
+        "description": "  表單上傳<br/>  <p>請注意，僅限使用 jpg、jpeg 與 png 格式，檔案大小限制為 3MB 以下。</p>  <pre>  <code>  &lt;form action=\"/api/thisismycourse2/admin/upload\" enctype=\"multipart/form-data\"  method=\"post\"&gt;<br/>  &lt;input type=\"file\" name=\"file-to-upload\"&gt;<br/>  &lt;input type=\"submit\" value=\"Upload\"&gt;<br/>  &lt;/form&gt;  </code>  </pre>  ",
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "上傳成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/uploadSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "上傳失敗",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/uploadError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/admin/articles": {
+      "get": {
+        "tags": ["管理控制台 - 文章 (Article)"],
+        "description": "",
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getArticles"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/admin/article/{id}": {
+      "get": {
+        "tags": ["管理控制台 - 文章 (Article)"],
+        "description": "",
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getArticleById"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["管理控制台 - 文章 (Article)"],
+        "description": "",
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "example": "新增第一篇文章2"
+                      },
+                      "description": {
+                        "type": "string",
+                        "example": "文章內容2"
+                      },
+                      "image": {
+                        "type": "string",
+                        "example": "test.testtest"
+                      },
+                      "tag": {
+                        "type": "array",
+                        "example": ["tag1"],
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "create_at": {
+                        "type": "number",
+                        "example": 1234566
+                      },
+                      "author": {
+                        "type": "string",
+                        "example": "alice"
+                      },
+                      "isPublic": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "content": {
+                        "type": "string",
+                        "example": "這是內容"
+                      }
+                    }
+                  }
+                },
+                "required": ["data"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "已建立文章"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "title 屬性不得為空"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["管理控制台 - 文章 (Article)"],
+        "description": "",
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "要刪除的 ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "已刪除文章"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "找不到文章"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/admin/article": {
+      "post": {
+        "tags": ["管理控制台 - 文章 (Article)"],
+        "description": "",
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "example": "新增第一篇文章"
+                      },
+                      "description": {
+                        "type": "string",
+                        "example": "文章內容"
+                      },
+                      "image": {
+                        "type": "string",
+                        "example": "test.testtest"
+                      },
+                      "tag": {
+                        "type": "array",
+                        "example": ["tag1"],
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "create_at": {
+                        "type": "number",
+                        "example": 1555459220
+                      },
+                      "author": {
+                        "type": "string",
+                        "example": "alice"
+                      },
+                      "isPublic": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "content": {
+                        "type": "string",
+                        "example": "這是內容"
+                      }
+                    }
+                  }
+                },
+                "required": ["data"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "已建立文章"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "title 屬性不得為空"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/products/all": {
+      "get": {
+        "tags": ["客戶購物 - 產品 (Products)"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userProductsAll"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/products": {
+      "get": {
+        "tags": ["客戶購物 - 產品 (Products)"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userProductsAll"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/product/{id}": {
+      "get": {
+        "tags": ["客戶購物 - 產品 (Products)"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userProduct"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/cart": {
+      "post": {
+        "tags": ["客戶購物 - 購物車 (Cart)"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "product_id": {
+                        "type": "string",
+                        "example": "-L9tH8jxVb2Ka_DYPwng"
+                      },
+                      "qty": {
+                        "type": "number",
+                        "example": 1
+                      }
+                    }
+                  }
+                },
+                "required": ["data"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userAddCart"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["客戶購物 - 購物車 (Cart)"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userGetCarts"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/cart/{id}": {
+      "put": {
+        "tags": ["客戶購物 - 購物車 (Cart)"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "product_id": {
+                        "type": "string",
+                        "example": "-L9tH8jxVb2Ka_DYPwng"
+                      },
+                      "qty": {
+                        "type": "number",
+                        "example": 1
+                      }
+                    }
+                  }
+                },
+                "required": ["data"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userUpdateCart"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["客戶購物 - 購物車 (Cart)"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userDeleteCart"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/carts": {
+      "delete": {
+        "tags": ["客戶購物 - 購物車 (Cart)"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userDeleteCartAll"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/coupon": {
+      "post": {
+        "tags": ["客戶購物 - 優惠券 (Coupon)"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string",
+                        "example": "testCode"
+                      }
+                    }
+                  }
+                },
+                "required": ["data"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userApplyCoupon"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/order": {
+      "post": {
+        "tags": ["客戶購物 - 結帳 (Order)"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "user": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "example": "test"
+                          },
+                          "email": {
+                            "type": "string",
+                            "example": "test@gmail.com"
+                          },
+                          "tel": {
+                            "type": "string",
+                            "example": "0912346768"
+                          },
+                          "address": {
+                            "type": "string",
+                            "example": "kaohsiung"
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "這是留言"
+                      }
+                    }
+                  }
+                },
+                "required": ["data"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userCheckoutOrder"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/orders": {
+      "get": {
+        "tags": ["客戶購物 - 結帳 (Order)"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userGetOrders"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/order/{order_id}": {
+      "get": {
+        "tags": ["客戶購物 - 結帳 (Order)"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userGetOrder"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/pay/{order_id}": {
+      "post": {
+        "tags": ["客戶購物 - 付款 (Pay)"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userPayment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/articles": {
+      "get": {
+        "tags": ["客戶購物 - 文章 (Article)"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userGetArticles"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/api/{api_path}/article/{id}": {
+      "get": {
+        "tags": ["客戶購物 - 文章 (Article)"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "api_path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userGetArticles"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "adminSignin": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "登入成功"
+          },
+          "uid": {
+            "type": "string",
+            "example": "QZDQO0zht4MNp7CE2t1"
+          },
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJSUzI1NiIsImtpZCI6InRCME0yQSJ9...."
+          },
+          "expired": {
+            "type": "number",
+            "example": 1630734430297
+          }
+        },
+        "required": ["status", "message", "uid", "token", "expired"]
+      },
+      "checkLoginAuth": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "uid": {
+            "type": "string",
+            "example": "QZDQO0zht4MNp7CE2t1"
+          }
+        },
+        "required": ["success", "uid"]
+      },
+      "checkLoginError": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "message": {
+            "type": "string",
+            "example": "請重新登入"
+          }
+        },
+        "required": ["success", "message"]
+      },
+      "uploadSuccess": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "imageUrl": {
+            "type": "string",
+            "example": "圖片連結(https)"
+          }
+        },
+        "required": ["success", "imageUrl"]
+      },
+      "uploadError": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "message": {
+            "type": "string",
+            "example": "檔案格式錯誤"
+          }
+        },
+        "required": ["success", "message"]
+      },
+      "storageErrors": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "message": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "example": "LIMIT_FILE_SIZE"
+              },
+              "field": {
+                "type": "string",
+                "example": "file-to-upload"
+              },
+              "storageErrors": {
+                "type": "array",
+                "example": [],
+                "items": {}
+              }
+            },
+            "required": ["code", "field", "storageErrors"]
+          }
+        },
+        "required": ["success", "message"]
+      },
+      "getProductsAll": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "category": {
+                  "type": "string",
+                  "example": "衣服3"
+                },
+                "content": {
+                  "type": "string",
+                  "example": "這是內容"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Sit down please 名設計師設計"
+                },
+                "id": {
+                  "type": "string",
+                  "example": "-L9tH8jxVb2Ka_DYPwng"
+                },
+                "is_enabled": {
+                  "type": "number",
+                  "example": 1
+                },
+                "num": {
+                  "type": "number",
+                  "example": 1
+                },
+                "origin_price": {
+                  "type": "number",
+                  "example": 500
+                },
+                "price": {
+                  "type": "number",
+                  "example": 600
+                },
+                "title": {
+                  "type": "string",
+                  "example": "[賣]動物園造型衣服3"
+                },
+                "unit": {
+                  "type": "string",
+                  "example": "個"
+                },
+                "imageUrl": {
+                  "type": "string",
+                  "example": "主圖網址"
+                },
+                "imagesUrl": {
+                  "type": "array",
+                  "example": ["圖片網址一", "圖片網址二", "圖片網址三", "圖片網址四", "圖片網址五"],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "category",
+                "content",
+                "description",
+                "id",
+                "is_enabled",
+                "num",
+                "origin_price",
+                "price",
+                "title",
+                "unit",
+                "imageUrl",
+                "imagesUrl"
+              ]
+            }
+          }
+        },
+        "required": ["success", "products"]
+      },
+      "getProducts": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "category": {
+                  "type": "string",
+                  "example": "衣服2"
+                },
+                "content": {
+                  "type": "string",
+                  "example": "這是內容"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Sit down please 名設計師設計"
+                },
+                "id": {
+                  "type": "string",
+                  "example": "-L9tH8jxVb2Ka_DYPwng"
+                },
+                "is_enabled": {
+                  "type": "number",
+                  "example": 1
+                },
+                "origin_price": {
+                  "type": "number",
+                  "example": 100
+                },
+                "price": {
+                  "type": "number",
+                  "example": 600
+                },
+                "title": {
+                  "type": "string",
+                  "example": "[賣]動物園造型衣服3"
+                },
+                "unit": {
+                  "type": "string",
+                  "example": "個"
+                },
+                "num": {
+                  "type": "number",
+                  "example": 1
+                },
+                "imageUrl": {
+                  "type": "string",
+                  "example": "主圖網址"
+                },
+                "imagesUrl": {
+                  "type": "array",
+                  "example": ["圖片網址一", "圖片網址二", "圖片網址三", "圖片網址四", "圖片網址五"],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "category",
+                "content",
+                "description",
+                "id",
+                "is_enabled",
+                "origin_price",
+                "price",
+                "title",
+                "unit",
+                "num",
+                "imageUrl",
+                "imagesUrl"
+              ]
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "total_pages": {
+                "type": "number",
+                "example": 1
+              },
+              "current_page": {
+                "type": "number",
+                "example": 1
+              },
+              "has_pre": {
+                "type": "boolean",
+                "example": false
+              },
+              "has_next": {
+                "type": "boolean",
+                "example": false
+              },
+              "category": {
+                "type": "string",
+                "example": ""
+              }
+            },
+            "required": ["total_pages", "current_page", "has_pre", "has_next", "category"]
+          },
+          "messages": {
+            "type": "array",
+            "example": [],
+            "items": {}
+          }
+        },
+        "required": ["success", "products", "pagination", "messages"]
+      },
+      "userProducts": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "products": {
+            "type": "object",
+            "properties": {
+              "-L9tH8jxVb2Ka_DYPwng": {
+                "type": "object",
+                "properties": {
+                  "category": {
+                    "type": "string",
+                    "example": "衣服3"
+                  },
+                  "content": {
+                    "type": "string",
+                    "example": "這是內容"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Sit down please 名設計師設計"
+                  },
+                  "id": {
+                    "type": "string",
+                    "example": "-L9tH8jxVb2Ka_DYPwng"
+                  },
+                  "is_enabled": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "num": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "origin_price": {
+                    "type": "number",
+                    "example": 500
+                  },
+                  "price": {
+                    "type": "number",
+                    "example": 600
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "[賣]動物園造型衣服3"
+                  },
+                  "unit": {
+                    "type": "string",
+                    "example": "個"
+                  },
+                  "imageUrl": {
+                    "type": "string",
+                    "example": "主圖網址"
+                  },
+                  "imagesUrl": {
+                    "type": "array",
+                    "example": [
+                      "圖片網址一",
+                      "圖片網址二",
+                      "圖片網址三",
+                      "圖片網址四",
+                      "圖片網址五"
+                    ],
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "category",
+                  "content",
+                  "description",
+                  "id",
+                  "is_enabled",
+                  "num",
+                  "origin_price",
+                  "price",
+                  "title",
+                  "unit",
+                  "imageUrl",
+                  "imagesUrl"
+                ]
+              }
+            },
+            "required": ["-L9tH8jxVb2Ka_DYPwng"]
+          },
+          "messages": {
+            "type": "array",
+            "example": [],
+            "items": {}
+          }
+        },
+        "required": ["success", "products", "messages"]
+      },
+      "userProduct": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "product": {
+            "type": "object",
+            "properties": {
+              "category": {
+                "type": "string",
+                "example": "衣服3"
+              },
+              "content": {
+                "type": "string",
+                "example": "這是內容"
+              },
+              "description": {
+                "type": "string",
+                "example": "Sit down please 名設計師設計"
+              },
+              "id": {
+                "type": "string",
+                "example": "-L9tH8jxVb2Ka_DYPwng"
+              },
+              "imageUrl": {
+                "type": "string",
+                "example": "主圖網址"
+              },
+              "imagesUrl": {
+                "type": "array",
+                "example": ["圖片網址一", "圖片網址二", "圖片網址三", "圖片網址四", "圖片網址五"],
+                "items": {
+                  "type": "string"
+                }
+              },
+              "is_enabled": {
+                "type": "number",
+                "example": 1
+              },
+              "num": {
+                "type": "number",
+                "example": 1
+              },
+              "origin_price": {
+                "type": "number",
+                "example": 100
+              },
+              "price": {
+                "type": "number",
+                "example": 600
+              },
+              "title": {
+                "type": "string",
+                "example": "[賣]動物園造型衣服3"
+              },
+              "unit": {
+                "type": "string",
+                "example": "個"
+              }
+            },
+            "required": [
+              "category",
+              "content",
+              "description",
+              "id",
+              "imageUrl",
+              "imagesUrl",
+              "is_enabled",
+              "num",
+              "origin_price",
+              "price",
+              "title",
+              "unit"
+            ]
+          }
+        },
+        "required": ["success", "product"]
+      },
+      "userProductsAll": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "category": {
+                  "type": "string",
+                  "example": "衣服3"
+                },
+                "content": {
+                  "type": "string",
+                  "example": "這是內容"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Sit down please 名設計師設計"
+                },
+                "id": {
+                  "type": "string",
+                  "example": "-L9tH8jxVb2Ka_DYPwng"
+                },
+                "imageUrl": {
+                  "type": "string",
+                  "example": "主圖網址"
+                },
+                "imagesUrl": {
+                  "type": "array",
+                  "example": ["圖片網址一", "圖片網址二", "圖片網址三", "圖片網址四", "圖片網址五"],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "is_enabled": {
+                  "type": "number",
+                  "example": 1
+                },
+                "num": {
+                  "type": "number",
+                  "example": 1
+                },
+                "origin_price": {
+                  "type": "number",
+                  "example": 100
+                },
+                "price": {
+                  "type": "number",
+                  "example": 600
+                },
+                "title": {
+                  "type": "string",
+                  "example": "[賣]動物園造型衣服3"
+                },
+                "unit": {
+                  "type": "string",
+                  "example": "個"
+                }
+              },
+              "required": [
+                "category",
+                "content",
+                "description",
+                "id",
+                "imageUrl",
+                "imagesUrl",
+                "is_enabled",
+                "num",
+                "origin_price",
+                "price",
+                "title",
+                "unit"
+              ]
+            }
+          },
+          "messages": {
+            "type": "array",
+            "example": [],
+            "items": {}
+          }
+        },
+        "required": ["success", "products", "messages"]
+      },
+      "getOrders": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "orders": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "create_at": {
+                  "type": "number",
+                  "example": 1523539519
+                },
+                "id": {
+                  "type": "string",
+                  "example": "-L9u11NAE0m0SpSBUDIq"
+                },
+                "is_paid": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "這是留言"
+                },
+                "products": {
+                  "type": "object",
+                  "properties": {
+                    "L8nBrq8Ym4ARI1Kog4t": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "L8nBrq8Ym4ARI1Kog4t"
+                        },
+                        "product_id": {
+                          "type": "string",
+                          "example": "-L8moRfPlDZZ2e-1ritQ"
+                        },
+                        "qty": {
+                          "type": "string",
+                          "example": "3"
+                        }
+                      },
+                      "required": ["id", "product_id", "qty"]
+                    }
+                  },
+                  "required": ["L8nBrq8Ym4ARI1Kog4t"]
+                },
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "address": {
+                      "type": "string",
+                      "example": "kaohsiung"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "test@gmail.com"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "test"
+                    },
+                    "tel": {
+                      "type": "string",
+                      "example": "0912346768"
+                    }
+                  },
+                  "required": ["address", "email", "name", "tel"]
+                },
+                "num": {
+                  "type": "number",
+                  "example": 2
+                }
+              },
+              "required": ["create_at", "id", "is_paid", "message", "products", "user", "num"]
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "total_pages": {
+                "type": "number",
+                "example": 1
+              },
+              "current_page": {
+                "type": "number",
+                "example": 1
+              },
+              "has_pre": {
+                "type": "boolean",
+                "example": false
+              },
+              "has_next": {
+                "type": "boolean",
+                "example": false
+              },
+              "category": {
+                "type": "string",
+                "example": ""
+              }
+            },
+            "required": ["total_pages", "current_page", "has_pre", "has_next", "category"]
+          },
+          "messages": {
+            "type": "array",
+            "example": [],
+            "items": {}
+          }
+        },
+        "required": ["success", "orders", "pagination", "messages"]
+      },
+      "updateOrderById": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "已更新訂單資訊"
+          }
+        },
+        "required": ["success", "message"]
+      },
+      "removeOrdersByOrderId": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "已刪除"
+          }
+        },
+        "required": ["success", "message"]
+      },
+      "removeAllOrders": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "已刪除"
+          }
+        },
+        "required": ["success", "message"]
+      },
+      "getCoupons": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "coupons": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "due_date": {
+                  "type": "number",
+                  "example": 6547658
+                },
+                "is_enabled": {
+                  "type": "number",
+                  "example": 1
+                },
+                "percent": {
+                  "type": "number",
+                  "example": 80
+                },
+                "title": {
+                  "type": "string",
+                  "example": "超級特惠價格"
+                }
+              },
+              "required": ["due_date", "is_enabled", "percent", "title"]
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "total_pages": {
+                "type": "number",
+                "example": 1
+              },
+              "current_page": {
+                "type": "number",
+                "example": 1
+              },
+              "has_pre": {
+                "type": "boolean",
+                "example": false
+              },
+              "has_next": {
+                "type": "boolean",
+                "example": false
+              },
+              "category": {
+                "type": "string",
+                "example": ""
+              }
+            },
+            "required": ["total_pages", "current_page", "has_pre", "has_next", "category"]
+          },
+          "messages": {
+            "type": "array",
+            "example": [],
+            "items": {}
+          }
+        },
+        "required": ["success", "coupons", "pagination", "messages"]
+      },
+      "userApplyCoupon": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "已套用優惠券:testCode"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "final_total": {
+                "type": "number",
+                "example": 2160
+              }
+            },
+            "required": ["final_total"]
+          }
+        },
+        "required": ["success", "message", "data"]
+      },
+      "getArticles": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "articles": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "author": {
+                  "type": "string",
+                  "example": "alice"
+                },
+                "create_at": {
+                  "type": "number",
+                  "example": 123455
+                },
+                "description": {
+                  "type": "string",
+                  "example": "123"
+                },
+                "id": {
+                  "type": "string",
+                  "example": "-MT-RbUo-e-d3RZIS_kJ"
+                },
+                "image": {
+                  "type": "string",
+                  "example": "url123"
+                },
+                "isPublic": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "tag": {
+                  "type": "array",
+                  "example": ["tag1", "tag2"],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "title": {
+                  "type": "string",
+                  "example": "title1234"
+                },
+                "num": {
+                  "type": "number",
+                  "example": 1
+                }
+              },
+              "required": [
+                "author",
+                "create_at",
+                "description",
+                "id",
+                "image",
+                "isPublic",
+                "tag",
+                "title",
+                "num"
+              ]
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "total_pages": {
+                "type": "number",
+                "example": 1
+              },
+              "current_page": {
+                "type": "number",
+                "example": 1
+              },
+              "has_pre": {
+                "type": "boolean",
+                "example": false
+              },
+              "has_next": {
+                "type": "boolean",
+                "example": false
+              },
+              "category": {
+                "type": "string",
+                "example": ""
+              }
+            },
+            "required": ["total_pages", "current_page", "has_pre", "has_next", "category"]
+          },
+          "messages": {
+            "type": "array",
+            "example": [],
+            "items": {}
+          }
+        },
+        "required": ["success", "articles", "pagination", "messages"]
+      },
+      "getArticleById": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "article": {
+            "type": "object",
+            "properties": {
+              "author": {
+                "type": "string",
+                "example": "alice"
+              },
+              "create_at": {
+                "type": "number",
+                "example": 123455
+              },
+              "description": {
+                "type": "string",
+                "example": "123"
+              },
+              "id": {
+                "type": "string",
+                "example": "-MT-RbUo-e-d3RZIS_kJ"
+              },
+              "content": {
+                "type": "string",
+                "example": "<p>你一現出，社這邊是是因為你真是。比較第一次開可以</p>"
+              },
+              "image": {
+                "type": "string",
+                "example": "url123"
+              },
+              "isPublic": {
+                "type": "boolean",
+                "example": false
+              },
+              "tag": {
+                "type": "array",
+                "example": ["tag1", "tag2"],
+                "items": {
+                  "type": "string"
+                }
+              },
+              "title": {
+                "type": "string",
+                "example": "title1234"
+              },
+              "num": {
+                "type": "number",
+                "example": 1
+              }
+            },
+            "required": [
+              "author",
+              "create_at",
+              "description",
+              "id",
+              "content",
+              "image",
+              "isPublic",
+              "tag",
+              "title",
+              "num"
+            ]
+          }
+        },
+        "required": ["success", "article"]
+      },
+      "userGetArticles": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "articles": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "example": "新增第一篇文章"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "文章內容"
+                },
+                "image": {
+                  "type": "string",
+                  "example": "test.testtest"
+                },
+                "tag": {
+                  "type": "array",
+                  "example": ["tag1"],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "create_at": {
+                  "type": "number",
+                  "example": 1555459220
+                },
+                "author": {
+                  "type": "string",
+                  "example": "alice"
+                },
+                "isPublic": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "content": {
+                  "type": "string",
+                  "example": "這是內容"
+                }
+              },
+              "required": [
+                "title",
+                "description",
+                "image",
+                "tag",
+                "create_at",
+                "author",
+                "isPublic",
+                "content"
+              ]
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "total_pages": {
+                "type": "number",
+                "example": 1
+              },
+              "current_page": {
+                "type": "number",
+                "example": 1
+              },
+              "has_pre": {
+                "type": "boolean",
+                "example": false
+              },
+              "has_next": {
+                "type": "boolean",
+                "example": false
+              },
+              "category": {
+                "type": "string",
+                "example": ""
+              }
+            },
+            "required": ["total_pages", "current_page", "has_pre", "has_next", "category"]
+          },
+          "messages": {
+            "type": "array",
+            "example": [],
+            "items": {}
+          }
+        },
+        "required": ["success", "articles", "pagination", "messages"]
+      },
+      "userGetArticle": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "article": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "example": "新增第一篇文章"
+              },
+              "description": {
+                "type": "string",
+                "example": "文章內容"
+              },
+              "image": {
+                "type": "string",
+                "example": "test.testtest"
+              },
+              "tag": {
+                "type": "array",
+                "example": ["tag1"],
+                "items": {
+                  "type": "string"
+                }
+              },
+              "content": {
+                "type": "string",
+                "example": "<p>你一現出，社這邊是是因為你真是。比較第一次開可以</p>"
+              },
+              "create_at": {
+                "type": "number",
+                "example": 1555459220
+              },
+              "author": {
+                "type": "string",
+                "example": "alice"
+              },
+              "isPublic": {
+                "type": "boolean",
+                "example": false
+              }
+            },
+            "required": [
+              "title",
+              "description",
+              "image",
+              "tag",
+              "content",
+              "create_at",
+              "author",
+              "isPublic"
+            ]
+          }
+        },
+        "required": ["success", "article"]
+      },
+      "userAddCart": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "已加入購物車"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "product_id": {
+                "type": "string",
+                "example": "-L9tH8jxVb2Ka_DYPwng"
+              },
+              "qty": {
+                "type": "number",
+                "example": 1
+              },
+              "id": {
+                "type": "string",
+                "example": "-LAl5v_2MhWeh3linQxx"
+              },
+              "total": {
+                "type": "number",
+                "example": 600
+              },
+              "final_total": {
+                "type": "number",
+                "example": 600
+              },
+              "product": {
+                "type": "object",
+                "properties": {
+                  "category": {
+                    "type": "string",
+                    "example": "衣服3"
+                  },
+                  "content": {
+                    "type": "string",
+                    "example": "這是內容"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Sit down please 名設計師設計"
+                  },
+                  "id": {
+                    "type": "string",
+                    "example": "-L9tH8jxVb2Ka_DYPwng"
+                  },
+                  "imageUrl": {
+                    "type": "string",
+                    "example": "主圖網址"
+                  },
+                  "imagesUrl": {
+                    "type": "array",
+                    "example": [
+                      "圖片網址一",
+                      "圖片網址二",
+                      "圖片網址三",
+                      "圖片網址四",
+                      "圖片網址五"
+                    ],
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "is_enabled": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "num": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "origin_price": {
+                    "type": "number",
+                    "example": 500
+                  },
+                  "price": {
+                    "type": "number",
+                    "example": 600
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "[賣]動物園造型衣服3"
+                  },
+                  "unit": {
+                    "type": "string",
+                    "example": "個"
+                  }
+                },
+                "required": [
+                  "category",
+                  "content",
+                  "description",
+                  "id",
+                  "imageUrl",
+                  "imagesUrl",
+                  "is_enabled",
+                  "num",
+                  "origin_price",
+                  "price",
+                  "title",
+                  "unit"
+                ]
+              }
+            },
+            "required": ["product_id", "qty", "id", "total", "final_total", "product"]
+          }
+        },
+        "required": ["success", "message", "data"]
+      },
+      "userGetCarts": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "carts": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "coupon": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "example": "testCode"
+                        },
+                        "due_date": {
+                          "type": "number",
+                          "example": 6547658
+                        },
+                        "id": {
+                          "type": "string",
+                          "example": "-L9uIs5EfPibJpwwTMhN"
+                        },
+                        "is_enabled": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "percent": {
+                          "type": "number",
+                          "example": 60
+                        },
+                        "title": {
+                          "type": "string",
+                          "example": "超級特惠價格"
+                        }
+                      },
+                      "required": ["code", "due_date", "id", "is_enabled", "percent", "title"]
+                    },
+                    "final_total": {
+                      "type": "number",
+                      "example": 2160
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "-LATwxc_bIJu-AR4AlNj"
+                    },
+                    "product": {
+                      "type": "object",
+                      "properties": {
+                        "category": {
+                          "type": "string",
+                          "example": "衣服3"
+                        },
+                        "content": {
+                          "type": "string",
+                          "example": "這是內容"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "Sit down please 名設計師設計"
+                        },
+                        "id": {
+                          "type": "string",
+                          "example": "-L9tH8jxVb2Ka_DYPwng"
+                        },
+                        "imageUrl": {
+                          "type": "string",
+                          "example": "主圖網址"
+                        },
+                        "imagesUrl": {
+                          "type": "array",
+                          "example": [
+                            "圖片網址一",
+                            "圖片網址二",
+                            "圖片網址三",
+                            "圖片網址四",
+                            "圖片網址五"
+                          ],
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "is_enabled": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "num": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "origin_price": {
+                          "type": "number",
+                          "example": 500
+                        },
+                        "price": {
+                          "type": "number",
+                          "example": 600
+                        },
+                        "title": {
+                          "type": "string",
+                          "example": "[賣]動物園造型衣服3"
+                        },
+                        "unit": {
+                          "type": "string",
+                          "example": "個"
+                        }
+                      },
+                      "required": [
+                        "category",
+                        "content",
+                        "description",
+                        "id",
+                        "imageUrl",
+                        "imagesUrl",
+                        "is_enabled",
+                        "num",
+                        "origin_price",
+                        "price",
+                        "title",
+                        "unit"
+                      ]
+                    },
+                    "product_id": {
+                      "type": "string",
+                      "example": "-L9tH8jxVb2Ka_DYPwng"
+                    },
+                    "qty": {
+                      "type": "number",
+                      "example": 6
+                    },
+                    "total": {
+                      "type": "number",
+                      "example": 3600
+                    }
+                  },
+                  "required": [
+                    "coupon",
+                    "final_total",
+                    "id",
+                    "product",
+                    "product_id",
+                    "qty",
+                    "total"
+                  ]
+                }
+              },
+              "total": {
+                "type": "number",
+                "example": 3600
+              },
+              "final_total": {
+                "type": "number",
+                "example": 2160
+              }
+            },
+            "required": ["carts", "total", "final_total"]
+          },
+          "messages": {
+            "type": "array",
+            "example": [],
+            "items": {}
+          }
+        },
+        "required": ["success", "data", "messages"]
+      },
+      "userDeleteCart": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "已刪除"
+          }
+        },
+        "required": ["success", "message"]
+      },
+      "userDeleteCartAll": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "已刪除"
+          }
+        },
+        "required": ["success", "message"]
+      },
+      "userUpdateCart": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "已更新購物車"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "product_id": {
+                "type": "string",
+                "example": "-L9tH8jxVb2Ka_DYPwng"
+              },
+              "qty": {
+                "type": "number",
+                "example": 1
+              }
+            },
+            "required": ["product_id", "qty"]
+          }
+        },
+        "required": ["success", "message", "data"]
+      },
+      "userCheckoutOrder": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "已建立訂單"
+          },
+          "total": {
+            "type": "number",
+            "example": 100
+          },
+          "create_at": {
+            "type": "number",
+            "example": 1523539519
+          },
+          "orderId": {
+            "type": "string",
+            "example": "-L9tH8jxVb2Ka_DYPwng"
+          }
+        },
+        "required": ["success", "message", "total", "create_at", "orderId"]
+      },
+      "userGetOrders": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "orders": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "create_at": {
+                  "type": "number",
+                  "example": 1523539519
+                },
+                "id": {
+                  "type": "string",
+                  "example": "-L9u11NAE0m0SpSBUDIq"
+                },
+                "is_paid": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "這是留言"
+                },
+                "products": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "L8nBrq8Ym4ARI1Kog4t"
+                      },
+                      "product_id": {
+                        "type": "string",
+                        "example": "-L8moRfPlDZZ2e-1ritQ"
+                      },
+                      "qty": {
+                        "type": "string",
+                        "example": "3"
+                      }
+                    },
+                    "required": ["id", "product_id", "qty"]
+                  }
+                },
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "address": {
+                      "type": "string",
+                      "example": "kaohsiung"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "test@gmail.com"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "test"
+                    },
+                    "tel": {
+                      "type": "string",
+                      "example": "0912346768"
+                    }
+                  },
+                  "required": ["address", "email", "name", "tel"]
+                },
+                "num": {
+                  "type": "number",
+                  "example": 1
+                }
+              },
+              "required": ["create_at", "id", "is_paid", "message", "products", "user", "num"]
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "total_pages": {
+                "type": "number",
+                "example": 1
+              },
+              "current_page": {
+                "type": "number",
+                "example": 1
+              },
+              "has_pre": {
+                "type": "boolean",
+                "example": false
+              },
+              "has_next": {
+                "type": "boolean",
+                "example": false
+              },
+              "category": {
+                "type": "string",
+                "example": ""
+              }
+            },
+            "required": ["total_pages", "current_page", "has_pre", "has_next", "category"]
+          },
+          "messages": {
+            "type": "array",
+            "example": [],
+            "items": {}
+          }
+        },
+        "required": ["success", "orders", "pagination", "messages"]
+      },
+      "userGetOrder": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "order": {
+            "type": "object",
+            "properties": {
+              "create_at": {
+                "type": "number",
+                "example": 1728973613
+              },
+              "id": {
+                "type": "string",
+                "example": "-O9DqubzZTdJkiRiIGuy"
+              },
+              "is_paid": {
+                "type": "boolean",
+                "example": true
+              },
+              "message": {
+                "type": "string",
+                "example": "1qq123"
+              },
+              "paid_date": {
+                "type": "number",
+                "example": 1728973617
+              },
+              "products": {
+                "type": "object",
+                "properties": {
+                  "-O9DqudLJUH3hnByf0Bg": {
+                    "type": "object",
+                    "properties": {
+                      "coupon": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string",
+                            "example": "testCode"
+                          },
+                          "due_date": {
+                            "type": "number",
+                            "example": 1791936000
+                          },
+                          "id": {
+                            "type": "string",
+                            "example": "-O988V-FceY28NH1AldL"
+                          },
+                          "is_enabled": {
+                            "type": "number",
+                            "example": 1
+                          },
+                          "num": {
+                            "type": "number",
+                            "example": 1
+                          },
+                          "percent": {
+                            "type": "number",
+                            "example": 80
+                          },
+                          "title": {
+                            "type": "string",
+                            "example": "123123123"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "due_date",
+                          "id",
+                          "is_enabled",
+                          "num",
+                          "percent",
+                          "title"
+                        ]
+                      },
+                      "final_total": {
+                        "type": "number",
+                        "example": 800
+                      },
+                      "id": {
+                        "type": "string",
+                        "example": "-O9DqudLJUH3hnByf0Bg"
+                      },
+                      "product": {
+                        "type": "object",
+                        "properties": {
+                          "category": {
+                            "type": "string",
+                            "example": "蛋糕"
+                          },
+                          "content": {
+                            "type": "string",
+                            "example": "蜜蜂蜜蛋糕，夾層夾上酸酸甜甜的檸檬餡，清爽可口的滋味讓人口水直流！"
+                          },
+                          "description": {
+                            "type": "string",
+                            "example": "尺寸：6寸"
+                          },
+                          "id": {
+                            "type": "string",
+                            "example": "-MoGs5oIfrsXHD8bE9po"
+                          },
+                          "imageUrl": {
+                            "type": "string",
+                            "example": "https://storage.googleapis.com/vue-course-api.appspot.com/hexschoolvue/1728751588618.jpg?GoogleAccessId=firebase-adminsdk-zzty7%40vue-course-api.iam.gserviceaccount.com&Expires=1742169600&Signature=SVvWwGbQdU9VoHldyhQhXTk5bMSx74QjS%2B9jTmKj5Iwe2dwwOcmeqkdFBx4yWCD3cyq4h%2B9v5gClAEjMmRBkI%2B3%2BhrETfokOqdWqCA09nQO5sslUG8%2FNPaLKmoOVWlbyLRPLlsjSTDNQlSq456wvKCjMuZ2VrQ0KesYMexUdGRIivv%2B7ZsddkQxt2SagyxR3INqR4SiEWZzeqa8VTcPqBi2SXz%2BN9ydKyuMhyj1Zgi%2BdAN5hwKqQ4tjb0RF%2BxNZRyMN637DSIh19wbYTRauS4jSePB4ZasWFy6h7ghO3LyCR1JFkUPg32cgnhVV5KUBDpzEY51jOCqzqxIq2mynjhQ%3D%3D"
+                          },
+                          "is_enabled": {
+                            "type": "number",
+                            "example": 1
+                          },
+                          "num": {
+                            "type": "number",
+                            "example": 2
+                          },
+                          "origin_price": {
+                            "type": "number",
+                            "example": 1500
+                          },
+                          "price": {
+                            "type": "number",
+                            "example": 1000
+                          },
+                          "title": {
+                            "type": "string",
+                            "example": "蜂蜜檸檬蛋糕"
+                          },
+                          "unit": {
+                            "type": "string",
+                            "example": "個"
+                          }
+                        },
+                        "required": [
+                          "category",
+                          "content",
+                          "description",
+                          "id",
+                          "imageUrl",
+                          "is_enabled",
+                          "num",
+                          "origin_price",
+                          "price",
+                          "title",
+                          "unit"
+                        ]
+                      },
+                      "product_id": {
+                        "type": "string",
+                        "example": "-MoGs5oIfrsXHD8bE9po"
+                      },
+                      "qty": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "total": {
+                        "type": "number",
+                        "example": 1000
+                      }
+                    },
+                    "required": [
+                      "coupon",
+                      "final_total",
+                      "id",
+                      "product",
+                      "product_id",
+                      "qty",
+                      "total"
+                    ]
+                  }
+                },
+                "required": ["-O9DqudLJUH3hnByf0Bg"]
+              },
+              "total": {
+                "type": "number",
+                "example": 4384
+              },
+              "user": {
+                "type": "object",
+                "properties": {
+                  "address": {
+                    "type": "string",
+                    "example": "123123"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "123@gmail.com"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "123123"
+                  },
+                  "tel": {
+                    "type": "string",
+                    "example": "123123123"
+                  }
+                },
+                "required": ["address", "email", "name", "tel"]
+              }
+            },
+            "required": [
+              "create_at",
+              "id",
+              "is_paid",
+              "message",
+              "paid_date",
+              "products",
+              "total",
+              "user"
+            ]
+          }
+        },
+        "required": ["success", "order"]
+      },
+      "userPayment": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "付款完成"
+          }
+        },
+        "required": ["success", "message"]
+      }
+    },
+    "securitySchemes": {}
+  }
+}
