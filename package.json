@@ -17,6 +17,8 @@
     "generate": "npx openapi-typescript ./src/openapi/raw/ec-course.json -o ./src/openapi/types/ec-course.ts"
   },
   "dependencies": {
+    "@tanstack/vue-query": "^5.90.2",
+    "axios": "^1.12.2",
     "bootstrap": "^5.3.8",
     "pinia": "^3.0.3",
     "swiper": "^12.0.2",
