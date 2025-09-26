@@ -1,7 +1,13 @@
 import { useQuery } from '@tanstack/vue-query'
 import axios from 'axios'
-import type { Ref } from 'vue'
-import type { GetAllProductsResponse, GetProductsParams, GetProductsResponse } from './types'
+import type { ComputedRef, Ref } from 'vue'
+import type {
+  GetAllProductsResponse,
+  GetProductDetailParams,
+  GetProductDetailResponse,
+  GetProductsParams,
+  GetProductsResponse,
+} from './types'
 
 const BASE_URL = import.meta.env.VITE_BASE_URL
 const API_PATH = import.meta.env.VITE_API_PATH
@@ -40,6 +46,14 @@ const getAllProducts = async (): Promise<GetAllProductsResponse['products']> => 
   return res.data.products
 }
 
+const getProductDetail = async (
+  params: GetProductDetailParams,
+): Promise<GetProductDetailResponse> => {
+  const res = await productApi.get(`/v2/api/${API_PATH}/product/${params.id}`)
+
+  return res.data.product
+}
+
 export const apiGetProducts = (params?: {
   page?: Ref<GetProductsParams['page']>
   category?: Ref<GetProductsParams['category']>
@@ -57,4 +71,13 @@ export const apiGetAllProducts = () =>
   useQuery<GetAllProductsResponse['products'], Error>({
     queryKey: ['productsAll'],
     queryFn: getAllProducts,
+  })
+
+export const apiGetProductDetail = (productId: ComputedRef<GetProductDetailParams['id']>) =>
+  useQuery<GetProductDetailResponse, Error>({
+    queryKey: [productId],
+    queryFn: () =>
+      getProductDetail({
+        id: productId.value,
+      }),
   })

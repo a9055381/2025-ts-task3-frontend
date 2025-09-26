@@ -8,3 +8,18 @@ export type GetProductsParams = Exclude<
 export type GetProductsResponse = components['schemas']['getProducts']
 
 export type GetAllProductsResponse = components['schemas']['getProductsAll']
+
+export type GetProductDetailParams = Pick<
+  paths['/v2/api/{api_path}/product/{id}']['get']['parameters']['path'],
+  'id'
+>
+
+export type GetProductDetailResponse = components['schemas']['userProduct']['product']
+
+// Cart
+export type GetCartResponse = components['schemas']['userGetCarts']['data']
+
+export type AddCartItemParams =
+  paths['/v2/api/{api_path}/cart']['post']['requestBody']['content']['application/json']['data']
+
+export type AddCartItemResponse = components['schemas']['userAddCart']
