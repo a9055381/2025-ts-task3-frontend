@@ -1,5 +1,100 @@
 <script setup lang="ts">
+import { computed, onMounted, ref } from 'vue'
+
+import { apiGetCart } from '@/api/cart'
+import { apiCreateOrder, apiProcessPayment } from '@/api/order'
 import Navbar from '@/components/Navbar.vue'
+import { useRouter } from 'vue-router'
+
+const step = ref<1 | 2>(1)
+
+const { data: cart } = apiGetCart()
+
+const orderId = ref<string | null>(null)
+
+const form = ref({
+  email: '',
+  name: '',
+  tel: '',
+  address: '',
+  message: '',
+})
+
+const submitBtn = ref<HTMLButtonElement | null>(null)
+
+const isSubmitted = ref(false)
+
+const submitForm = () => {
+  isSubmitted.value = true
+  submitBtn.value?.click()
+}
+
+const { mutateAsync: submitOrder, isPending: isSubmitting } = apiCreateOrder()
+
+const handleSubmit = async () => {
+  try {
+    const { message, ...userData } = form.value
+
+    const res = await submitOrder({
+      user: userData,
+      message,
+    })
+
+    orderId.value = res.orderId
+    step.value = 2
+  } catch (error) {
+    alert('訂單建立失敗')
+  }
+}
+
+const isEmailValid = computed(() => {
+  const emailPattern = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
+  return form.value.email && emailPattern.test(form.value.email.trim())
+})
+
+const isNameValid = computed(() => {
+  return form.value.name && form.value.name.trim() !== ''
+})
+
+const isPhoneValid = computed(() => {
+  const phonePattern = /^09\d{8}$/
+  return form.value.tel && phonePattern.test(form.value.tel)
+})
+
+const isAddressValid = computed(() => {
+  return form.value.address && form.value.address.trim() !== ''
+})
+
+const handleNextStep = () => {
+  if (orderId.value) {
+    step.value = 2
+    return
+  }
+
+  submitForm()
+}
+
+const { mutateAsync: processPayment, isPending: isProcessingPayment } = apiProcessPayment()
+
+const handleProcessPayment = async () => {
+  if (!orderId.value) return
+
+  try {
+    await processPayment(orderId.value)
+    router.push('/checkout-success')
+  } catch (error) {
+    alert('付款失敗')
+  }
+}
+
+const router = useRouter()
+
+onMounted(() => {
+  if (cart.value?.carts.length === 0) {
+    alert('購物車尚未有商品')
+    router.push('/products')
+  }
+})
 </script>
 
 <template>
@@ -9,102 +104,165 @@ import Navbar from '@/components/Navbar.vue'
         <Navbar />
       </div>
     </div>
-    <div class="row justify-content-center">
-      <div class="col-md-10">
-        <h3 class="fw-bold mb-4 pt-3">輸入結帳資訊</h3>
-      </div>
-    </div>
-    <div class="row flex-row-reverse justify-content-center pb-5">
-      <div class="col-md-4">
-        <div class="border p-4 mb-4">
-          <div class="d-flex">
-            <img
-              src="https://images.unsplash.com/photo-1631122750867-6cfee01358b5?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8QmlyZCUyMG9mJTIwUGFyYWRpc2V8ZW58MHwwfDB8fHwy"
-              alt=""
-              class="me-2"
-              style="width: 48px; height: 48px; object-fit: cover"
-            />
-            <div class="w-100">
-              <div class="d-flex justify-content-between">
-                <p class="mb-0 fw-bold">天堂鳥蕉</p>
-                <p class="mb-0">NT$12,000</p>
-              </div>
-              <p class="mb-0 fw-bold">x1</p>
-            </div>
-          </div>
-          <div class="d-flex mt-2">
-            <img
-              src="https://images.unsplash.com/photo-1680812992886-6231db0dabeb?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              alt=""
-              class="me-2"
-              style="width: 48px; height: 48px; object-fit: cover"
-            />
-            <div class="w-100">
-              <div class="d-flex justify-content-between">
-                <p class="mb-0 fw-bold">石蓮花</p>
-                <p class="mb-0">NT$12,000</p>
-              </div>
-              <p class="mb-0 fw-bold">x1</p>
-            </div>
-          </div>
-          <table class="table mt-4 border-top border-bottom text-muted">
-            <tbody>
-              <tr>
-                <th scope="row" class="border-0 px-0 pt-4 font-weight-normal">小計</th>
-                <td class="text-end border-0 px-0 pt-4">NT$24,000</td>
-              </tr>
-              <tr>
-                <th scope="row" class="border-0 px-0 pt-0 pb-4 font-weight-normal">付款方式</th>
-                <td class="text-end border-0 px-0 pt-0 pb-4">ApplePay</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="d-flex justify-content-between mt-4">
-            <p class="mb-0 h4 fw-bold">總計</p>
-            <p class="mb-0 h4 fw-bold">NT$24,000</p>
-          </div>
+    <template v-if="cart?.carts && cart?.carts.length > 0">
+      <div class="row justify-content-center">
+        <div class="col-md-10">
+          <h3 v-if="step === 1" class="fw-bold mb-4 pt-3">輸入結帳資訊</h3>
+          <h3 v-else class="fw-bold mb-4 pt-3">選擇付款方式</h3>
         </div>
       </div>
-      <div class="col-md-6">
-        <form>
-          <div class="mb-2">
-            <label for="ContactMail" class="text-muted mb-0">電子信箱</label>
-            <input
-              type="email"
-              class="form-control"
-              id="ContactMail"
-              aria-describedby="emailHelp"
-              placeholder="example@gmail.com"
-            />
+      <div class="row flex-row-reverse justify-content-center pb-5">
+        <div class="col-md-4">
+          <div class="border p-4 mb-4">
+            <div class="d-flex flex-column justify-content-center gap-2">
+              <div v-for="cartItem in cart?.carts" :key="cartItem.id" class="d-flex">
+                <img
+                  :src="cartItem.product.imageUrl"
+                  :alt="cartItem.product.title"
+                  class="me-2"
+                  style="width: 48px; height: 48px; object-fit: cover"
+                />
+                <div class="w-100">
+                  <div class="d-flex justify-content-between">
+                    <p class="mb-0 fw-bold">{{ cartItem.product.title }}</p>
+                    <p class="mb-0">NT${{ cartItem.final_total.toLocaleString('zh-TW') }}</p>
+                  </div>
+                  <p class="mb-0 fw-bold">x{{ cartItem.qty }}</p>
+                </div>
+              </div>
+            </div>
+            <table class="table mt-4 border-top border-bottom text-muted">
+              <tbody>
+                <tr>
+                  <th scope="row" class="border-0 px-0 pt-4 font-weight-normal">小計</th>
+                  <td class="text-end border-0 px-0 pt-4">
+                    NT${{ cart?.total.toLocaleString('zh-TW') }}
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="border-0 px-0 pt-0 pb-4 font-weight-normal">付款方式</th>
+                  <td class="text-end border-0 px-0 pt-0 pb-4">ApplePay</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="d-flex justify-content-between mt-4">
+              <p class="mb-0 h4 fw-bold">總計</p>
+              <p class="mb-0 h4 fw-bold">NT${{ cart?.final_total.toLocaleString('zh-TW') }}</p>
+            </div>
           </div>
-          <div class="mb-2">
-            <label for="ContactName" class="text-muted mb-0">姓名</label>
-            <input type="text" class="form-control" id="ContactName" placeholder="王漂亮" />
+        </div>
+        <div class="col-md-6">
+          <form v-if="step === 1" @submit.prevent="handleSubmit">
+            <div class="mb-2">
+              <label for="email" class="text-muted mb-0">電子信箱</label>
+              <input
+                v-model="form.email"
+                required
+                type="email"
+                class="form-control"
+                id="email"
+                placeholder="example@gmail.com"
+              />
+              <span v-if="!isEmailValid && isSubmitted" class="text-danger small mt-1">
+                請輸入正確的電子信箱
+              </span>
+            </div>
+            <div class="mb-2">
+              <label for="name" class="text-muted mb-0">姓名</label>
+              <input
+                v-model="form.name"
+                required
+                type="text"
+                class="form-control"
+                id="name"
+                placeholder="王漂亮"
+              />
+              <span v-if="!isNameValid && isSubmitted" class="text-danger small mt-1">
+                請輸入姓名
+              </span>
+            </div>
+            <div class="mb-2">
+              <label for="tel" class="text-muted mb-0">手機</label>
+              <input
+                v-model="form.tel"
+                required
+                type="text"
+                class="form-control"
+                id="tel"
+                placeholder="0912345678"
+              />
+              <span v-if="!isPhoneValid && isSubmitted" class="text-danger small mt-1">
+                請輸入正確的手機號碼
+              </span>
+            </div>
+            <div class="mb-2">
+              <label for="address" class="text-muted mb-0">地址</label>
+              <input
+                v-model="form.address"
+                required
+                type="text"
+                class="form-control"
+                id="address"
+                placeholder="高雄市新興區"
+              />
+              <span v-if="!isAddressValid && isSubmitted" class="text-danger small mt-1">
+                請輸入正確的地址
+              </span>
+            </div>
+            <div class="mb-2">
+              <label for="message" class="text-muted mb-0">留言</label>
+              <textarea
+                v-model="form.message"
+                class="form-control"
+                rows="3"
+                id="message"
+                placeholder="六角學院，只要你不放棄，我們就不放棄你 ... "
+              ></textarea>
+            </div>
+            <button ref="submitBtn" type="submit" class="d-none"></button>
+          </form>
+          <div v-else class="card rounded-0">
+            <div class="card-header bg-white border-0 py-3">
+              <p class="mb-0 position-relative custom-checkout-label">Apple Pay</p>
+            </div>
           </div>
-          <div class="mb-2">
-            <label for="ContactPhone" class="text-muted mb-0">手機</label>
-            <input type="text" class="form-control" id="ContactPhone" placeholder="0912345678" />
-          </div>
-          <div class="mb-2">
-            <label for="ContactMessage" class="text-muted mb-0">留言</label>
-            <textarea
-              class="form-control"
-              rows="3"
-              id="ContactMessage"
-              placeholder="六角學院，只要你不放棄，我們就不放棄你 ... "
-            ></textarea>
-          </div>
-        </form>
-        <div
-          class="d-flex flex-column-reverse flex-md-row mt-4 justify-content-between align-items-md-center align-items-end w-100"
-        >
-          <RouterLink to="/cart" class="text-dark mt-md-0 mt-3"
-            ><i class="fas fa-chevron-left me-2"></i>返回</RouterLink
+          <div
+            class="d-flex flex-column-reverse flex-md-row mt-4 justify-content-between align-items-md-center align-items-end w-100"
           >
-          <RouterLink to="/checkout-payment" class="btn btn-dark py-3 px-7">結帳</RouterLink>
+            <template v-if="step === 1">
+              <RouterLink to="/cart" class="text-dark mt-md-0 mt-3"
+                ><i class="fas fa-chevron-left me-2"></i>返回</RouterLink
+              >
+              <button
+                @click="handleNextStep"
+                :disabled="isSubmitting"
+                type="button"
+                class="btn btn-dark py-3 px-7"
+              >
+                下一步
+              </button>
+            </template>
+            <template v-else>
+              <button
+                @click="step = 1"
+                type="button"
+                class="link-dark bg-transparent border-0 mt-md-0 mt-3 p-0"
+              >
+                <i class="fas fa-chevron-left me-2"></i>返回
+              </button>
+              <button
+                @click="handleProcessPayment"
+                :disabled="isProcessingPayment"
+                type="button"
+                class="btn btn-dark py-3 px-7"
+              >
+                結帳
+              </button>
+            </template>
+          </div>
         </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 

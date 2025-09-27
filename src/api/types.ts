@@ -36,6 +36,16 @@ export type DeleteCartItemParams =
 export type DeleteCartItemResponse = components['schemas']['userDeleteCart']
 
 // Order
+export type CreateOrderParams =
+  paths['/v2/api/{api_path}/order']['post']['requestBody']['content']['application/json']['data']
+
+export type CreateOrderResponse = components['schemas']['userCheckoutOrder']
+
+export type ProcessPaymentParams =
+  paths['/v2/api/{api_path}/pay/{order_id}']['post']['parameters']['path']['order_id']
+
+export type ProcessPaymentResponse = components['schemas']['userPayment']
+
 export type ApplyCouponParams =
   paths['/v2/api/{api_path}/coupon']['post']['requestBody']['content']['application/json']['data']['code']
 
