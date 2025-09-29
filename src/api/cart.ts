@@ -36,26 +36,28 @@ cartApi.interceptors.response.use(
 )
 
 const getCart = async (): Promise<GetCartResponse> => {
-  const res = await cartApi.get(`/v2/api/${API_PATH}/cart`)
+  const res = await cartApi.get<{ data: GetCartResponse }>(`/v2/api/${API_PATH}/cart`)
 
   return res.data.data
 }
 
 const addCartItem = async (params: AddCartItemParams): Promise<AddCartItemResponse> => {
-  const res = await cartApi.post(`/v2/api/${API_PATH}/cart`, { data: params })
+  const res = await cartApi.post<AddCartItemResponse>(`/v2/api/${API_PATH}/cart`, { data: params })
 
   return res.data
 }
 
 const updateCartItem = async (params: UpdateCartItemParams): Promise<UpdateCartItemResponse> => {
   const { id: cartId, ...data } = params
-  const res = await cartApi.put(`/v2/api/${API_PATH}/cart/${cartId}`, { data })
+  const res = await cartApi.put<UpdateCartItemResponse>(`/v2/api/${API_PATH}/cart/${cartId}`, {
+    data,
+  })
 
   return res.data
 }
 
 const deleteCartItem = async (cartId: DeleteCartItemParams): Promise<DeleteCartItemResponse> => {
-  const res = await cartApi.delete(`/v2/api/${API_PATH}/cart/${cartId}`)
+  const res = await cartApi.delete<DeleteCartItemResponse>(`/v2/api/${API_PATH}/cart/${cartId}`)
 
   return res.data
 }

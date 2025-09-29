@@ -35,19 +35,21 @@ orderApi.interceptors.response.use(
 )
 
 const createOrder = async (data: CreateOrderParams): Promise<CreateOrderResponse> => {
-  const res = await orderApi.post(`/v2/api/${API_PATH}/order`, { data })
+  const res = await orderApi.post<CreateOrderResponse>(`/v2/api/${API_PATH}/order`, { data })
 
   return res.data
 }
 
 const processPayment = async (orderId: ProcessPaymentParams): Promise<ProcessPaymentResponse> => {
-  const res = await orderApi.post(`/v2/api/${API_PATH}/pay/${orderId}`)
+  const res = await orderApi.post<ProcessPaymentResponse>(`/v2/api/${API_PATH}/pay/${orderId}`)
 
   return res.data
 }
 
 const applyCoupon = async (couponCode: ApplyCouponParams): Promise<ApplyCouponResponse> => {
-  const res = await orderApi.post(`/v2/api/${API_PATH}/coupon`, { data: { code: couponCode } })
+  const res = await orderApi.post<ApplyCouponResponse>(`/v2/api/${API_PATH}/coupon`, {
+    data: { code: couponCode },
+  })
 
   return res.data
 }

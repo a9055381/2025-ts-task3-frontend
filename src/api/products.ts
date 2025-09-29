@@ -35,13 +35,13 @@ productApi.interceptors.response.use(
 )
 
 const getProducts = async (params: GetProductsParams): Promise<GetProductsResponse> => {
-  const res = await productApi.get(`/v2/api/${API_PATH}/products`, { params })
+  const res = await productApi.get<GetProductsResponse>(`/v2/api/${API_PATH}/products`, { params })
 
   return res.data
 }
 
 const getAllProducts = async (): Promise<GetAllProductsResponse['products']> => {
-  const res = await productApi.get(`/v2/api/${API_PATH}/products/all`)
+  const res = await productApi.get<GetAllProductsResponse>(`/v2/api/${API_PATH}/products/all`)
 
   return res.data.products
 }
@@ -49,7 +49,9 @@ const getAllProducts = async (): Promise<GetAllProductsResponse['products']> => 
 const getProductDetail = async (
   params: GetProductDetailParams,
 ): Promise<GetProductDetailResponse> => {
-  const res = await productApi.get(`/v2/api/${API_PATH}/product/${params.id}`)
+  const res = await productApi.get<{ product: GetProductDetailResponse }>(
+    `/v2/api/${API_PATH}/product/${params.id}`,
+  )
 
   return res.data.product
 }
