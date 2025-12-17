@@ -83,7 +83,7 @@ const handleDeleteCartItem = async (cartId: string) => {
   cartStore.deleteCartItem(cartId)
 }
 
-const couponCode = ref('')
+const couponCode = ref<string>('')
 
 const isApplyingCoupon = ref(false)
 

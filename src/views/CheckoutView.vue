@@ -27,14 +27,14 @@ const form = ref({
 
 const submitBtn = ref<HTMLButtonElement | null>(null)
 
-const isSubmitted = ref(false)
+const isSubmitted = ref<boolean>(false)
 
 const submitForm = () => {
   isSubmitted.value = true
   submitBtn.value?.click()
 }
 
-const isSubmitting = ref(false)
+const isSubmitting = ref<boolean>(false)
 
 const handleSubmit = async () => {
   try {
@@ -83,7 +83,7 @@ const handleNextStep = () => {
   submitForm()
 }
 
-const isProcessingPayment = ref(false)
+const isProcessingPayment = ref<boolean>(false)
 
 const handleProcessPayment = async () => {
   if (!orderId.value) return

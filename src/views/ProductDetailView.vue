@@ -15,7 +15,7 @@ import { apiGetProductDetail, apiGetProducts } from '@/api/products'
 import { useCartStore } from '@/stores/cartStore'
 import type { Product } from '@/types/product'
 
-const productNum = ref(1)
+const productNum = ref<number>(1)
 
 const route = useRoute()
 

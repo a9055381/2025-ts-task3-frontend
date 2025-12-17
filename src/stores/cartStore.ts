@@ -10,8 +10,8 @@ export const useCartStore = defineStore('cart', () => {
     final_total: 0,
   })
 
-  const isUpdating = ref(false)
-  const isDeleting = ref(false)
+  const isUpdating = ref<boolean>(false)
+  const isDeleting = ref<boolean>(false)
 
   const getCart = async () => {
     try {

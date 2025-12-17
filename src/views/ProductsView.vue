@@ -7,8 +7,8 @@ import Navbar from '@/components/Navbar.vue'
 import { apiGetAllProducts, apiGetProducts } from '@/api/products'
 import type { Pagination, Product } from '@/types/product'
 
-const currentPage = ref('1')
-const selectedCategory = ref('')
+const currentPage = ref<string>('1')
+const selectedCategory = ref<string>('')
 
 const products = ref<Product[]>([])
 const allProducts = ref<Product[]>([])
